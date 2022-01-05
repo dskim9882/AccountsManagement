@@ -4,6 +4,7 @@ Author : dskim9882, email - dskim9882@gmail.com
 Contents : level 2 of Accounts Management Project
 Reference : 열혈 C++ 프로그래밍, 윤성우 저
 */
+#pragma warning(disable:4996)
 #include <iostream>
 #include <cstring>
 
@@ -30,8 +31,8 @@ private :
 	int accID;
 
 public :
-	Account(int accID, int balance, char *name)
-		: this->accID(accID), this->balance(balance)
+	Account(int id, int money, char *name)
+		: accID(id), balance(money)
 	{
 		this->name = new char[strlen(name) + 1];
 		strcpy(this->name, name);
@@ -45,6 +46,10 @@ public :
 		cout << "Name : " << name << endl;
 		cout << "Balance : " << balance << endl << endl;
 	};
+
+	~Account() {
+		delete []name;
+	}
 };
 
 Account *accs[100]; // 고객 정보 저장을 위한 배열
@@ -74,6 +79,9 @@ int main() {
 			break;
 		case 5 :
 			cout << "[exiting...]" << endl;
+			for (int i = 0; i < accNum; i++) {
+				delete accs[i];
+			}
 			return 0;
 		default :
 			cout << "[ERROR] incorrect number" << endl;
