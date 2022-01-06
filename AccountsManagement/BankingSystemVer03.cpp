@@ -1,7 +1,7 @@
 /*
-Banking System Ver 0.2
+Banking System Ver 0.3
 Author : dskim9882, email - dskim9882@gmail.com
-Contents : level 2 of Accounts Management Project
+Contents : level 3 of Accounts Management Project
 Reference : 열혈 C++ 프로그래밍, 윤성우 저
 */
 #pragma warning(disable:4996)
@@ -36,6 +36,12 @@ public :
 	{
 		this->name = new char[strlen(name) + 1];
 		strcpy(this->name, name);
+	}
+	Account(const Account& copy) // 복사 생성자 - 깊은 복사
+		: accID(copy.accID), balance(copy.balance)
+	{
+		name = new char[strlen(copy.name) + 1];
+		strcpy(name, copy.name);
 	}
 	int getID() { return accID; };
 	int getBalance() { return balance; }
