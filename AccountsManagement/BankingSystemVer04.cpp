@@ -1,7 +1,7 @@
 /*
-Banking System Ver 0.3
+Banking System Ver 0.4
 Author : dskim9882, email - dskim9882@gmail.com
-Contents : level 3 of Accounts Management Project
+Contents : level 4 of Accounts Management Project
 Reference : 열혈 C++ 프로그래밍, 윤성우 저
 */
 #pragma warning(disable:4996)
@@ -10,14 +10,6 @@ Reference : 열혈 C++ 프로그래밍, 윤성우 저
 
 using namespace std;
 
-
-/*
-typedef struct account {
-	char name[20];
-	int balance;
-	int accID;
-} ACC;// 고객 정보 struct
-*/
 void ShowMenu();
 void CreateAcc();
 void Deposit();
@@ -43,11 +35,11 @@ public :
 		name = new char[strlen(copy.name) + 1];
 		strcpy(name, copy.name);
 	}
-	int getID() { return accID; };
-	int getBalance() { return balance; }
+	int getID() const { return accID; };
+	int getBalance() const { return balance; }
 	void deposit(int money) { balance += money; };
 	void withdraw(int money) { balance -= money; };
-	void listAccs() {
+	void listAccs() const {
 		cout << "Account ID : " << accID << endl;
 		cout << "Name : " << name << endl;
 		cout << "Balance : " << balance << endl << endl;
