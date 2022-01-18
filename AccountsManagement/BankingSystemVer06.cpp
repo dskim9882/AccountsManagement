@@ -1,7 +1,7 @@
 /*
-Banking System Ver 0.5
+Banking System Ver 0.6
 Author : dskim9882, email - dskim9882@gmail.com
-Contents : level 5 of Accounts Management Project
+Contents : level 6 of Accounts Management Project
 Reference : 열혈 C++ 프로그래밍, 윤성우 저
 */
 #pragma warning(disable:4996)
@@ -31,7 +31,7 @@ public :
 	}
 	int getID() const { return accID; };
 	int getBalance() const { return balance; }
-	void deposit(int money) { balance += money; };
+	virtual void deposit(int money) { balance += money; };
 	void withdraw(int money) { balance -= money; };
 	void listAccs() const {
 		cout << "Account ID : " << accID << endl;
@@ -42,6 +42,53 @@ public :
 	~Account() {
 		delete []name;
 	}
+};
+
+class NormalAccount : public Account {
+private:
+	int interestRate;
+
+public:
+	NormalAccount(int id, int money, char *name, int interRate)
+		: Account(id, money, name), interestRate(interRate)
+	{
+	
+	}
+
+	NormalAccount(const NormalAccount& normAcc)
+		:  Account(normAcc), interestRate(normAcc.interestRate)
+	{
+	
+	}
+	
+	virtual void deposit(int money) { 
+		Account::deposit(money);
+		Account::deposit(money * (interestRate / 100.0));
+	};
+
+};
+
+class HighCreditAccount : public NormalAccount {
+private:
+	int creditInterestRate;
+
+public:
+	HighCreditAccount(int id, int money, char *name, int interRate, int level)
+		: NormalAccount(id, money, name, interRate), creditInterestRate(level)
+	{
+	
+	}
+
+	HighCreditAccount(const HighCreditAccount& highAcc)
+		:  NormalAccount(highAcc), creditInterestRate(highAcc.creditInterestRate)
+	{
+	
+	}
+	
+	virtual void deposit(int money) { 
+		NormalAccount::deposit(money);
+		Account::deposit(money * (creditInterestRate / 100.0));
+	};
 };
 
 class AccountHandler {
@@ -65,9 +112,12 @@ public:
 	}
 
 	void CreateAcc() {
+		int choice;
 		int id;
 		char name[20];
 		int money;
+		int interestRate;
+		int creditLevel;
 
 		cout << "[Create Account]" << endl;
 
@@ -76,20 +126,65 @@ public:
 			return;
 		}
 
-		cout << "Account ID : " << endl;
-		cin >> id;
+		cout << "1. Normal Account 2. High Credit Account" << endl;
+		cin >> choice;
 
-		cout << "Name : " << endl;
-		cin >> name;
+		switch (choice) {
+		case 1:
+			cout << "Account ID : " << endl;
+			cin >> id;
 
-		cout << "Balance : " << endl;
-		cin >> money;
+			cout << "Name : " << endl;
+			cin >> name;
 
-		cout << endl;
+			cout << "Balance : " << endl;
+			cin >> money;
 
-		accs[accNum] = new Account(id, money, name);
+			cout << "Interest Rate : " << endl;
+			cin >> interestRate;
 
-		accNum++;
+			cout << endl;
+
+			accs[accNum++] = new NormalAccount(id, money, name, interestRate);
+
+			break;
+		case 2:
+			cout << "Account ID : " << endl;
+			cin >> id;
+
+			cout << "Name : " << endl;
+			cin >> name;
+
+			cout << "Balance : " << endl;
+			cin >> money;
+
+			cout << "Interest Rate : " << endl;
+			cin >> interestRate;
+
+			cout << "Credit Level : " << endl;
+			cin >> creditLevel;
+
+			cout << endl;
+			switch (creditLevel) {
+			case 1:
+				accs[accNum++] = new HighCreditAccount(id, money, name, interestRate, 7);
+				break;
+			case 2:
+				accs[accNum++] = new HighCreditAccount(id, money, name, interestRate, 4);
+				break;
+			case 3:
+				accs[accNum++] = new HighCreditAccount(id, money, name, interestRate, 2);
+				break;
+			default:
+				cout << "[ERROR] incorrect number" << endl;
+				break;
+			}
+			break;
+		default :
+			cout << "[ERROR] incorrect number" << endl;
+			break;
+		}
+
 		return;
 	}
 
